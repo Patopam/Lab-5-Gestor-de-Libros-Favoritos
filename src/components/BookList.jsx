@@ -3,11 +3,11 @@ import { useSelector } from 'react-redux';
 import BookItem from './BookItem';
 
 const BookList = () => {
-	const books = useSelector((state) => state.books.books);
-	const favorites = useSelector((state) => state.books.favorites);
+	const books = useSelector((state) => state.books.books) || [];
+	const favorites = useSelector((state) => state.books.favorites) || [];
 	const [filter, setFilter] = useState('Todos');
 
-	const categories = ['Todos', ...new Set(books.map((book) => book.category))];
+	const categories = ['Todos', ...new Set((books || []).map((book) => book.category))];
 	const filteredBooks = filter === 'Todos' ? books : books.filter((book) => book.category === filter);
 
 	return (
@@ -20,9 +20,8 @@ const BookList = () => {
 				))}
 			</select>
 
-			{filteredBooks.map((book) => (
-				<BookItem key={book.id} book={book} isFavorite={favorites.includes(book.id)} />
-			))}
+			{filteredBooks &&
+				filteredBooks.map((book) => <BookItem key={book.id} book={book} isFavorite={favorites.includes(book.id)} />)}
 		</div>
 	);
 };
